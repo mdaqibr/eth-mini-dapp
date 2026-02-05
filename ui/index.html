@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini DApp</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.8.1/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <h2>Mini Decentralized Asset Platform</h2>
+
+  <button onclick="connect()">Connect Wallet</button>
+
+  <p><b>Wallet:</b> <span id="wallet">Not connected</span></p>
+  <p><b>Network:</b> <span id="network">-</span></p>
+
+  <script>
+    async function connect() {
+      if (!window.ethereum) {
+        alert("MetaMask not installed");
+        return;
+      }
+
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+
+      const signer = await provider.getSigner();
+      const address = await signer.getAddress();
+      const network = await provider.getNetwork();
+
+      document.getElementById("wallet").innerText = address;
+      document.getElementById("network").innerText = network.name + " (" + network.chainId + ")";
+    }
+  </script>
+</body>
+</html>

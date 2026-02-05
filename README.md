@@ -1,7 +1,8 @@
 # Mini Decentralized Asset Platform (Ethereum)
 
-A mini decentralized application built using **Ethereum**, **Hardhat**, **ERC20**, and **ERC721 (NFT)** standards.  
-This project demonstrates smart contract development, deployment, wallet interaction, and real-time blockchain event handling.
+A mini decentralized application built using **Ethereum**, **Hardhat**, **ERC20**, and **ERC721 (NFT)** standards.
+
+This project demonstrates **smart contract development**, **wallet integration**, **token standards**, **event handling**, and **blockchain development workflows** as required in the assignment.
 
 ---
 
@@ -11,9 +12,9 @@ This project demonstrates smart contract development, deployment, wallet interac
 - ✅ ERC721 NFT (non-fungible asset)
 - ✅ Token-based NFT minting
 - ✅ Local Ethereum blockchain using Hardhat
-- ✅ Event handling (ERC20 transfers & NFT mint events)
+- ✅ Wallet interaction (Hardhat + MetaMask)
+- ✅ Real-time blockchain event handling
 - ✅ Off-chain event listener
-- ✅ Wallet interaction via Hardhat signers
 
 ---
 
@@ -33,125 +34,99 @@ mini-dapp/
 ├── hardhat.config.cjs     # Hardhat configuration
 ├── package.json
 ├── README.md
-```
----
-## ⚙️ Tech Stack
 
-- Solidity – Smart contracts
+```
+## ⚙️ Tech Stack
+- Solidity – Smart contract language
 - Hardhat – Ethereum development framework
-- OpenZeppelin – Secure contract standards
+- OpenZeppelin – Secure ERC20 & ERC721 standards
 - Ethers.js (v6) – Blockchain interaction
 - Node.js – Runtime environment
+- MetaMask – Wallet integration
 
-## 🚀 How the Application Works (Flow)
-##### Local Blockchain
-- Hardhat runs a local Ethereum node with pre-funded test accounts.
-
-##### Contract Deployment
-
-- MyToken (ERC20) is deployed and mints tokens to the deployer.
-- MyNFT (ERC721) is deployed and linked to the ERC20 contract.
-- NFT minting requires ERC20 token payment.
-
-##### Event Handling
-
-- ERC20 emits Transfer events
-- NFT emits NFTMinted events
-- An off-chain script listens to these events in real time
-
-##### User Interaction
-
-- Tokens can be transferred between accounts
-- NFTs can be minted
-- Events are captured and logged
-
----
-## 🛠️ Setup Instructions
-##### Prerequisites
-Make sure you have:
-- Node.js v18+
-- npm
-- Linux / macOS / Windows
-
-Check versions:
-```
-node -v
-npm -v
-```
-## 📦 Installation
-
-Clone the repository:
-```
-git clone <repo-url>
-cd mini-dapp
-```
-
-Install dependencies:
-```
-npm install
-```
----
-## ▶️ Running the Application
-##### 🟢 Step 1: Start Local Blockchain
-
-Open Terminal 1:
+## 🚀 How the Application Works (End-to-End Flow)
+### Local Blockchain Creation
+- Hardhat creates a local Ethereum blockchain using:
 ```
 npx hardhat node
 ```
+- Runs at http://127.0.0.1:8545
+- Generates 20 pre-funded test accounts
+- Simulates real Ethereum behavior (blocks, gas, transactions)
+- This fulfills the requirement for using a blockchain development framework.
 
-This starts a local Ethereum network at:
-```
-http://127.0.0.1:8545
-```
-##### 🟢 Step 2: Deploy Smart Contracts
-
-Open Terminal 2:
+### Smart Contract Deployment
+- Contracts are deployed using:
 ```
 npm run deploy
 ```
 
-Example output:
-```
-Deploying with: 0xf39F...
-ERC20 deployed to: 0x5FbDB231...
-NFT deployed to: 0xe7f1725E...
-```
-📌 Save these contract addresses.
+Deployment flow:
+1. MyToken (ERC20)
 
-##### 🟢 Step 3: Update Event Listener
+   - Mints initial supply to the deployer
+   - Emits Transfer events
 
-Edit:
+2. MyNFT (ERC721)
+
+   - Linked to the ERC20 token
+   - Requires ERC20 tokens to mint NFTs
+   - Emits NFTMinted events
+
+This fulfills:
+
+- Smart contract development
+- ERC20 & ERC721 token standards
+
+### Wallet Interaction (Hardhat + MetaMask)
+🔹 Hardhat Wallet
+- Uses auto-generated test accounts
+- Managed via ethers.getSigners()
+- Used for deployment and testing
+
+🔹 MetaMask Wallet Connection
+- To connect MetaMask to the local blockchain:
+
+   1. Open MetaMask
+   2. Add a new network:
 ```
-scripts/listenEvents.js
+Network Name: Hardhat Local
+RPC URL: http://127.0.0.1:8545
+Chain ID: 31337
+Currency Symbol: ETH
 ```
+   3. Import a Hardhat account using a private key printed in the terminal
 
-Replace:
-```
-const ERC20_ADDRESS = "PASTE_ERC20_ADDRESS";
-const NFT_ADDRESS  = "PASTE_NFT_ADDRESS";
-```
+MetaMask now interacts with the same local blockchain.
 
-with the deployed addresses.
+This fulfills the wallet integration requirement.
 
-##### 🟢 Step 4: Listen for Blockchain Events
+## Blockchain Event Handling
+The script listenEvents.js listens to blockchain events off-chain.
 
-Open Terminal 3:
+Events captured:
+
+- ERC20 Transfer
+- ERC721 NFTMinted
+
+Run the listener:
 ```
 npm run listen
 ```
-
-Output:
+Example output:
 ```
-👂 Listening for events...
+ERC20 → sender → receiver: 100
+NFT Minted → owner, TokenID
 ```
-##### 🟢 Step 5: Interact Using Hardhat Console
+This fulfills the event handling requirement.
 
-Open Terminal 4:
+## User Interaction (Console)
+Use Hardhat console to interact with contracts:
 ```
 npx hardhat console --network localhost
 ```
+Example ERC20 transfer:
 
-Transfer ERC20 tokens:
 ```
 const token = await ethers.getContractAt(
   "MyToken",
@@ -163,8 +138,53 @@ await token.transfer(
   100
 );
 ```
+The event is instantly detected by the listener.
 
-You’ll see the event in the listener terminal:
+## Setup Instructions
+Prerequisites
+- Node.js v18+
+- npm
+
+Check versions:
 ```
-ERC20 → sender → receiver: 100
+node -v
+npm -v
+```
+
+## 📦 Installation
+```
+git clone <repository-url>
+cd mini-dapp
+npm install
+```
+
+## ▶️ Running the Application
+### Step 1: Start Local Blockchain
+```
+npx hardhat node
+```
+### Step 2: Deploy Contracts
+```
+npm run deploy
+```
+Save the deployed contract addresses.
+
+### Step 3: Update Event Listener
+```
+scripts/listenEvents.js
+```
+Paste deployed addresses:
+```
+const ERC20_ADDRESS = "0x...";
+const NFT_ADDRESS  = "0x...";
+```
+
+### Step 4: Listen for Events
+```
+npm run listen
+```
+
+### Step 5: Interact via Console
+```
+npx hardhat console --network localhost
 ```
